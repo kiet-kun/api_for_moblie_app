@@ -1,6 +1,7 @@
 ﻿using api_for_moblie_app.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace api_for_moblie_app.Controllers
 {
@@ -18,11 +19,17 @@ namespace api_for_moblie_app.Controllers
                Created = DateTime.Now
            }
         };
+        private readonly DataContext _context;
+
+        public UserController(DataContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> Get()
         {
-            return Ok(users);
+            return Ok(await _context.Users.ToListAsync());
         }
 
         
