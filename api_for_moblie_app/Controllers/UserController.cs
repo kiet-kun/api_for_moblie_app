@@ -60,6 +60,20 @@ namespace api_for_moblie_app.Controllers
 
             return Ok(users);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<User>> DeleteUser(int id)
+        {
+            var user = users.Find(user => user.Id == id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            users.Remove(user);
+
+            return Ok(user);
+        }
     }
 
    
