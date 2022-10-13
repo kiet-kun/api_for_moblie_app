@@ -44,8 +44,22 @@ namespace api_for_moblie_app.Controllers
             users.Add(user);
             return Ok(users);
         }
-        
 
+        [HttpPut]
+        public async Task<ActionResult<List<User>>> UpadateUser(User request)
+        {
+            var user = users.Find(user => user.Id == request.Id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            user.Name = request.Name;
+            user.Age = request.Age;
+            user.Created = request.Created;
+
+            return Ok(users);
+        }
     }
 
    
