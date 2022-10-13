@@ -24,6 +24,28 @@ namespace api_for_moblie_app.Controllers
         {
             return Ok(users);
         }
+
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> Get(int id)
+        {
+            var user = users.Find(user => user.Id == id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+            return Ok(user);
+        }
+        
+
+        [HttpPost]
+        public async Task<ActionResult<List<User>>> AddUser(User user)
+        {
+            users.Add(user);
+            return Ok(users);
+        }
+        
+
     }
 
    
