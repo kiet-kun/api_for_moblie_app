@@ -9,16 +9,6 @@ namespace api_for_moblie_app.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private static List<User> users = new List<User>
-        {
-           new User
-           {
-               Id=1,
-               Name = "Nguyen Hoang Kiet",
-               Age = 20,
-               Created = DateTime.Now
-           }
-        };
         private readonly DataContext _context;
 
         public UserController(DataContext context)
@@ -36,7 +26,7 @@ namespace api_for_moblie_app.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Get(int id)
         {
-            var user = users.Find(user => user.Id == id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return BadRequest("User not found.");
@@ -48,14 +38,15 @@ namespace api_for_moblie_app.Controllers
         [HttpPost]
         public async Task<ActionResult<List<User>>> AddUser(User user)
         {
-            users.Add(user);
-            return Ok(users);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return Ok(await _context.Users.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<User>>> UpadateUser(User request)
         {
-            var user = users.Find(user => user.Id == request.Id);
+            var user = await _context.Users.FindAsync(request.Id);
             if (user == null)
             {
                 return BadRequest("User not found.");
@@ -65,21 +56,25 @@ namespace api_for_moblie_app.Controllers
             user.Age = request.Age;
             user.Created = request.Created;
 
-            return Ok(users);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Users.ToListAsync());
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
-            var user = users.Find(user => user.Id == id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return BadRequest("User not found.");
             }
 
-            users.Remove(user);
+            _context.Users.Remove(user);
 
-            return Ok(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Users.ToListAsync());
         }
     }
 
